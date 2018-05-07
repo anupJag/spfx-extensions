@@ -1,0 +1,29 @@
+{
+  "$schema": "https://dev.office.com/json-schemas/core-build/serve.schema.json",
+  "port": 4321,
+  "https": true,
+  "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://myadmo365.sharepoint.com/sites/pnp",
+      "customActions": {
+        "5b46a3aa-2883-425c-8dfc-421072955d56": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "Bottom" : "Bottom Placeholder"
+          }
+        }
+      }
+    },
+    "commonHeaderFooter": {
+      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
+      "customActions": {
+        "5b46a3aa-2883-425c-8dfc-421072955d56": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Test message"
+          }
+        }
+      }
+    }
+  }
+}
