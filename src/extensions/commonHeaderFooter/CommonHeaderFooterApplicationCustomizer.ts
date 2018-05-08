@@ -30,7 +30,6 @@ const LOG_SOURCE: string = 'CommonHeaderFooterApplicationCustomizer';
  * You can define an interface to describe it.
  */
 export interface ICommonHeaderFooterApplicationCustomizerProperties {
-  Bottom:string;
 }
 
 /** A Custom Action which can be run during execution of a Client Side Application */

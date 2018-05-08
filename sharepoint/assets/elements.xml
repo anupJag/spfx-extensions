@@ -4,6 +4,6 @@
         Title="CommonHeaderFooter"
         Location="ClientSideExtension.ApplicationCustomizer"
         ClientSideComponentId="5b46a3aa-2883-425c-8dfc-421072955d56"
-        ClientSideComponentProperties="{&quot;testMessage&quot;:&quot;Test message&quot;}">
+        ClientSideComponentProperties="{}">
     </CustomAction>
 </Elements>

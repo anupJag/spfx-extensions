@@ -9,7 +9,6 @@
         "5b46a3aa-2883-425c-8dfc-421072955d56": {
           "location": "ClientSideExtension.ApplicationCustomizer",
           "properties": {
-            "Bottom" : "Bottom Placeholder"
           }
         }
       }
@@ -20,7 +19,6 @@
         "5b46a3aa-2883-425c-8dfc-421072955d56": {
           "location": "ClientSideExtension.ApplicationCustomizer",
           "properties": {
-            "testMessage": "Test message"
           }
         }
       }
