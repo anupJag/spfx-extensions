@@ -13,7 +13,7 @@ import {
   ISPHttpClientConfiguration
 } from '@microsoft/sp-http';
 import {
-  IODataWeb
+  IODataWeb,
 } from '@microsoft/sp-odata-types';
 import { Dialog } from '@microsoft/sp-dialog';
 import { escape } from '@microsoft/sp-lodash-subset';
@@ -22,6 +22,7 @@ import styles from './CommonHeaderFooterApplicationCustomizer.module.scss';
 import * as strings from 'CommonHeaderFooterApplicationCustomizerStrings';
 
 const LOG_SOURCE: string = 'CommonHeaderFooterApplicationCustomizer';
+
 
 /**
  * If your command set uses the ClientSideComponentProperties JSON input,
@@ -35,22 +36,46 @@ export interface ICommonHeaderFooterApplicationCustomizerProperties {
 /** A Custom Action which can be run during execution of a Client Side Application */
 export default class CommonHeaderFooterApplicationCustomizer
   extends BaseApplicationCustomizer<ICommonHeaderFooterApplicationCustomizerProperties> {
+  
     private _TopPlaceHolder: PlaceholderContent | undefined;
     private _BottomPlaceHolder : PlaceholderContent | undefined;
+    private _WebProperty : string;
+    
 
   @override
   public onInit(): Promise<void> {
     console.log("Starting Application Customizer");
-    console.log("Available Placeholders: " + this.context.placeholderProvider.placeholderNames.map(name => PlaceholderName[name]).join(", "));
+    
+    //this.context.placeholderProvider.changedEvent.add(this, this._GetWebDetails);
 
-    this._RenderPlaceHolders();
+    this._GetWebDetails();
 
     console.log("Starting Application Customizer");
     return Promise.resolve();
   }
   
-  public _RenderPlaceHolders(): void {
+  private _GetWebDetails(): Promise<string> {
+    const spHTTPClient : SPHttpClient = this.context.spHttpClient;
+    const currentWebURL : string = this.context.pageContext.web.absoluteUrl;
+
+    spHTTPClient.get(`${currentWebURL}/_api/web/AllProperties?$select=cust_Site_Type`, SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
+        response.json().then((data) => {
+            console.log(data.cust_x005f_Site_x005f_Type);
+             this._WebProperty = data.cust_x005f_Site_x005f_Type;
+        }).catch(() => {
+          console.log("Unable to retrieve property !");
+          this._WebProperty = "Classification yet to be defined by Admin";
+        }).then(() => this._RenderPlaceHolders()).catch(() => {
+          console.error();
+        });
+    });
+    return Promise.resolve(this._WebProperty);
+  }
+
+  private _RenderPlaceHolders(): void {
     
+    console.log("Available Placeholders: " + this.context.placeholderProvider.placeholderNames.map(name => PlaceholderName[name]).join(", "));
+
     if(!this._BottomPlaceHolder){
       this._BottomPlaceHolder = this.context.placeholderProvider.tryCreateContent(
         PlaceholderName.Bottom,
@@ -62,21 +87,15 @@ export default class CommonHeaderFooterApplicationCustomizer
       console.log("Not Able to Fetch {0} Place Holder", PlaceholderName.Bottom);
     }
 
-    let bottomString:string;
-    if(this.properties){
-      if(!this.properties.Bottom){
-        bottomString = "Default Bottom Text being called!";
-      }
-      else{
-        bottomString = this.properties.Bottom;
-      }
+    if(!this._WebProperty){
+      this._WebProperty = "Classification yet to be defined by Admin";
     }
 
     if(this._BottomPlaceHolder.domElement){
       this._BottomPlaceHolder.domElement.innerHTML=`<div class="${styles.app}">
       <div class="ms-bgColor-themeDark ms-fontColor-white ${styles.bottom} ${styles.outerStruct}">
         <span style="margin-left:2%; display:inline-flex;">
-          <i class="ms-Icon ms-Icon--Info" aria-hidden="true"></i>Internal Use Only
+          <i class="ms-Icon ms-Icon--Info" aria-hidden="true"></i>&nbsp;${escape(this._WebProperty)}
         </span>
         <span style="margin-right:2%">
           &copy; ${escape(new Date().getFullYear().toString())}
@@ -88,6 +107,6 @@ export default class CommonHeaderFooterApplicationCustomizer
   }
 
   private _onDispose(): void {
-    console.log('[HelloWorldApplicationCustomizer._onDispose] Disposed custom top and bottom placeholders.');
+    console.log('Disposed custom top and bottom placeholders.');
   }
 }
