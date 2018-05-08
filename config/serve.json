@@ -4,7 +4,7 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://myadmo365.sharepoint.com/sites/pnp",
+      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
       "customActions": {
         "5b46a3aa-2883-425c-8dfc-421072955d56": {
           "location": "ClientSideExtension.ApplicationCustomizer",
